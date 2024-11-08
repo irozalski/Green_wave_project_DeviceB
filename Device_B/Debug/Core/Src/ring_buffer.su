@@ -1,0 +1,5 @@
+../Core/Src/ring_buffer.c:26:9:RSA_Decrypt	48	static
+../Core/Src/ring_buffer.c:139:6:buffer_add_rx	24	static
+../Core/Src/ring_buffer.c:147:6:buffer_get_full_message	24	static
+../Core/Src/ring_buffer.c:155:6:flush_rx_buffer	8	static
+../Core/Src/ring_buffer.c:165:6:receive_message	40	dynamic
