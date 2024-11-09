@@ -27,6 +27,8 @@
 #include "nRF24.h"
 #include "spi.h"
 #include "ring_buffer.h"
+#include "ir_sender.h"
+#include "ir_receiver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,10 +57,16 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+//nRF variables
 volatile uint8_t nrf24_rx_flag, nrf24_tx_flag, nrf24_mr_flag;
-uint8_t Nrf24_Message[NRF24_PAYLOAD_SIZE];
-uint8_t Message[32];
-uint8_t MessageLength;
+
+//IR variables
+uint8_t command = 0x0E;
+uint32_t lastCommandTime = 0;
+
+//state variables
+int transmission_step = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,6 +80,20 @@ static void MX_USART1_UART_Init(void);
 static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim == &htim3)
+  {
+    switch (HAL_TIM_GetActiveChannel(&htim3))
+    {
+      case HAL_TIM_ACTIVE_CHANNEL_1:
+        ir_tim_interrupt();
+        break;
+      default:
+        break;
+    }
+  }
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -114,6 +136,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
+
+  //nRF Config
   nRF24_Init(&hspi2);
 //    	nRF24_SetRXAddress(0, "Odb");
 //    	nRF24_SetTXAddress("Nad");
@@ -123,9 +147,13 @@ int main(void)
       nRF24_SetTXAddress("Odb");
       nRF24_TX_Mode();
 
-HAL_Delay(200);
+  //IR Config
+  ir_sender_init();
+  ir_receiver_init();
 
-       uint8_t Messag[] =
+  HAL_Delay(200);
+
+       uint8_t Message[] =
         {
           0xB5, 0x05, 0xFC, 0xA2, 0xCA, 0x33, 0x48, 0xD5, 0x9B, 0xF3, 0x00, 0x5F, 0x7C, 0xFD, 0xC4, 0x56, 0x4C, 0x25, 0x07,
           0x67, 0xE9, 0xC9, 0x40, 0x24, 0x69, 0x79, 0x61, 0x41, 0x98, 0x1D, 0x6A, 0xF5, 0x6A, 0x1A, 0x84, 0xB5, 0xA9, 0xA4,
@@ -142,15 +170,32 @@ HAL_Delay(200);
           0x5A, 0x7E, 0x72, 0x3D, 0xA1, 0x8C, 0x43, 0xAE, 0x83, 0xD9, 0xB4, 0xCB, 0x1D, 0xDC, 0x26, 0x3F, 0x7F, 0x1E, 0xFE,
           0x83, 0x6C, 0x9A, 0x0D, 0xEA, 0xE1, 0x94, 0x55, 0xF1
         };
-    			buffer_add(Messag, sizeof(Messag));
+    			buffer_add(Message, sizeof(Message));
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  if(transmission_step == 0){
+	  	  int value = ir_read();
+	  	  	  	  if (value != -1) {
+	  	  	  	    if (value == IR_CODE_ONOFF){
+	  	  	  	    	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	  	  	  	    	transmission_step = 1;
+	  	  	  	    }
+	  	  	  	  }
+	  	  }
+	  	  if(transmission_step == 1){
+	  	  	  uint32_t currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
+	  	  	  	  if ((currentTime - lastCommandTime) >= 1000) {
+	  	  	  	      NEC_SendCommand(command);           // Wysłanie komendy
+	  	  	  	      lastCommandTime = currentTime;      // Aktualizacja czasu ostatniego wysłania
+	  	  	  	  }
+	  	  }
     /* USER CODE END WHILE */
-	  send_message(50);
+	  //send_message(50);
 	  //receive_message();
     /* USER CODE BEGIN 3 */
   }

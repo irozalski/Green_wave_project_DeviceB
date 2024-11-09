@@ -1,0 +1,4 @@
+../Core/Src/ir_sender.c:4:6:ir_sender_init	8	static
+../Core/Src/ir_sender.c:10:6:delay_us	16	static
+../Core/Src/ir_sender.c:17:6:NEC_SendCommand	32	static
+../Core/Src/ir_sender.c:62:6:NEC_SendBit	16	static
