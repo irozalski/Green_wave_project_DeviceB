@@ -5,4 +5,4 @@
 ../Core/Src/ring_buffer.c:165:6:receive_message	40	dynamic
 ../Core/Src/ring_buffer.c:201:6:buffer_add	24	static
 ../Core/Src/ring_buffer.c:210:9:buffer_get_chunk	24	static
-../Core/Src/ring_buffer.c:221:6:send_message	16	static
+../Core/Src/ring_buffer.c:221:9:send_message	16	static

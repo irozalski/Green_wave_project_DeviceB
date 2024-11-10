@@ -33,7 +33,19 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+//State_machine
+typedef enum
+{
+	WAIT_FOR_SIGNAL = 0,
+	RECEIVE_IR,
+	SEND_IR,
+	SEND_RF,
+	RECEIVE_RF,
+	GREEN_LIGHT,
+	RESET_STATE
+}State_type;
 
+State_type current_state;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -65,8 +77,10 @@ uint8_t command = 0x0E;
 uint32_t lastCommandTime = 0;
 
 //state variables
-int transmission_step = 0;
-
+uint8_t single_rx_tx_flag = 0;
+uint32_t currentTime = 0;  //aktualnego czasu w ms
+uint8_t send_counter = 0;
+uint8_t send_status = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,6 +94,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
+//Edge interrupt callback
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim == &htim3)
@@ -88,12 +103,25 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     {
       case HAL_TIM_ACTIVE_CHANNEL_1:
         ir_tim_interrupt();
+        current_state = RECEIVE_IR;
         break;
       default:
         break;
     }
   }
 }
+
+void state_machine_init();
+void WaitForSignal();
+void Reset();
+void ReceiveIR();
+void SendIR();
+void SendRF();
+void ReceiveRF();
+void GreenLight();
+
+//This table contains a pointer to the function call in each state
+void (*state_table[])() = {WaitForSignal, ReceiveIR, SendIR, SendRF, ReceiveRF, GreenLight, Reset};
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -143,9 +171,9 @@ int main(void)
 //    	nRF24_SetTXAddress("Nad");
 //    	nRF24_RX_Mode();
 //
-  nRF24_SetRXAddress(0, "Nad");
-      nRF24_SetTXAddress("Odb");
-      nRF24_TX_Mode();
+//  nRF24_SetRXAddress(0, "Nad");
+//      nRF24_SetTXAddress("Odb");
+//      nRF24_TX_Mode();
 
   //IR Config
   ir_sender_init();
@@ -170,38 +198,100 @@ int main(void)
           0x5A, 0x7E, 0x72, 0x3D, 0xA1, 0x8C, 0x43, 0xAE, 0x83, 0xD9, 0xB4, 0xCB, 0x1D, 0xDC, 0x26, 0x3F, 0x7F, 0x1E, 0xFE,
           0x83, 0x6C, 0x9A, 0x0D, 0xEA, 0xE1, 0x94, 0x55, 0xF1
         };
-    			buffer_add(Message, sizeof(Message));
+
+       buffer_add(Message, sizeof(Message));
+
+       state_machine_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  state_table[current_state]();
 
-	  if(transmission_step == 0){
-	  	  int value = ir_read();
-	  	  	  	  if (value != -1) {
-	  	  	  	    if (value == IR_CODE_ONOFF){
-	  	  	  	    	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	  	  	  	    	transmission_step = 1;
-	  	  	  	    }
-	  	  	  	  }
-	  	  }
-	  	  if(transmission_step == 1){
-	  	  	  uint32_t currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
-	  	  	  	  if ((currentTime - lastCommandTime) >= 1000) {
-	  	  	  	      NEC_SendCommand(command);           // Wysłanie komendy
-	  	  	  	      lastCommandTime = currentTime;      // Aktualizacja czasu ostatniego wysłania
-	  	  	  	  }
-	  	  }
     /* USER CODE END WHILE */
-	  //send_message(50);
-	  //receive_message();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
 
+//State_machine init
+
+void state_machine_init(){
+	current_state = WAIT_FOR_SIGNAL;
+}
+
+void WaitForSignal(){
+	//sleep, nwm, nic nie rob
+}
+
+void Reset(){
+	single_rx_tx_flag = 0;
+	send_counter = 0;
+	current_state = WAIT_FOR_SIGNAL;
+
+}
+
+void ReceiveIR(){
+
+	int value = ir_read();
+	if (value != -1) {
+		if (value == IR_CODE_ONOFF){
+			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			current_state = SEND_IR;
+		}
+		else{
+			current_state = RESET_STATE;
+		}
+	}
+}
+
+void SendIR(){
+	currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
+	if ((currentTime - lastCommandTime) >= 1000) {
+		NEC_SendCommand(command);           // Wysłanie komendy
+		send_counter++;
+		lastCommandTime = currentTime;      // Aktualizacja czasu ostatniego wysłania
+		}
+	if(send_counter>=6){
+	current_state = SEND_RF;
+	}
+}
+
+void SendRF(){
+	if(single_rx_tx_flag == 0){
+	nRF24_SetRXAddress(0, "Nad");
+	nRF24_SetTXAddress("Odb");
+	nRF24_TX_Mode();
+	single_rx_tx_flag ++;
+	}
+	send_status = send_message(50);
+	if(send_message(50)){
+		current_state = RECEIVE_RF;
+	}
+}
+
+void ReceiveRF(){
+	if(single_rx_tx_flag == 1){
+	nRF24_SetRXAddress(0, "Odb");
+	nRF24_SetTXAddress("Nad");
+	nRF24_RX_Mode();
+	single_rx_tx_flag ++;
+	}
+	receive_message();
+	// Porównanie czyt message1 == message2 // trzeba zmienić funkcje
+	if(single_rx_tx_flag == 2){
+		current_state = GREEN_LIGHT;
+	}
+	else{
+		current_state = RESET_STATE;
+	}
+}
+void GreenLight(){
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	current_state = RESET;
+}
 /**
   * @brief System Clock Configuration
   * @retval None

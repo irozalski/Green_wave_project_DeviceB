@@ -21,6 +21,6 @@ void receive_message();
 //TRANSMITTER
 void buffer_add(uint8_t* data, uint16_t length);
 uint8_t buffer_get_chunk(uint8_t* chunk);
-void send_message(uint32_t delay_time);
+uint8_t send_message(uint32_t delay_time);
 
 #endif /* INC_RING_BUFFER_H_ */

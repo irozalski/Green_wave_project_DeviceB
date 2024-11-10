@@ -218,7 +218,7 @@ uint8_t buffer_get_chunk(uint8_t* chunk) {
     return 1;  // Chunk is ready to send
 }
 
-void send_message(uint32_t delay_time){
+uint8_t send_message(uint32_t delay_time){
 	if (tx_size > 0 && HAL_GetTick() - PackageTimer > delay_time) {
 		if (buffer_get_chunk(chunk)) {
 		    nRF24_WriteTXPayload(chunk);  // Send 32-byte chunk
@@ -226,6 +226,12 @@ void send_message(uint32_t delay_time){
 		    }
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);  // Toggle LED to indicate transmission
 		PackageTimer = HAL_GetTick();
+		return 0;
 	}
+
+	if(tx_size == 0){
+		return 1;
+	}
+	return 0;
 }
 //--------------------------------------------------------------||----------------------------------------------------------------//
