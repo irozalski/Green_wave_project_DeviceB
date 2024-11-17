@@ -162,7 +162,7 @@ void flush_rx_buffer() {
     memset(rx_ring_buffer, 0, sizeof(rx_ring_buffer));
 }
 
-void receive_message(){
+int32_t receive_message(){
 	if (nRF24_RXAvailible()) {
 		    nRF24_ReadRXPaylaod(chunk);  // Receive 32-byte chunk
 		    buffer_add_rx(chunk, NRF24_PAYLOAD_SIZE);  // Store received chunk in the buffer
@@ -182,10 +182,12 @@ void receive_message(){
 		          status = RSA_Decrypt(&PrivKey_st, received_message, output, &outputSize);
 
 		     flush_rx_buffer();
+		     return 1;
 		     }
 
 		     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);  // Toggle LED to indicate reception
 		}
+	return 0;
 }
 
 //--------------------------------------------------------------||----------------------------------------------------------------//
@@ -218,7 +220,8 @@ uint8_t buffer_get_chunk(uint8_t* chunk) {
     return 1;  // Chunk is ready to send
 }
 
-void send_message(uint32_t delay_time){
+int32_t send_message(uint32_t delay_time){
+
 	if (tx_size > 0 && HAL_GetTick() - PackageTimer > delay_time) {
 		if (buffer_get_chunk(chunk)) {
 		    nRF24_WriteTXPayload(chunk);  // Send 32-byte chunk
@@ -227,5 +230,10 @@ void send_message(uint32_t delay_time){
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);  // Toggle LED to indicate transmission
 		PackageTimer = HAL_GetTick();
 	}
+
+	if(tx_size == 0){
+			return 1;
+		}
+	return 0;
 }
 //--------------------------------------------------------------||----------------------------------------------------------------//

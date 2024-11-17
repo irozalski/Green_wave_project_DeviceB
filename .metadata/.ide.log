@@ -618,3 +618,7 @@
 2024-11-08 09:12:25,303 [INFO] McuFinderGlobals:65 - Set McuFinderConnectedMode to true
 2024-11-08 09:12:25,305 [INFO] ApiDb:447 - Save user favorites file C:\Users\Igor/.stm32cubeide/favorites.mcus.txt: 0 item(s)
 2024-11-08 09:12:25,306 [INFO] ApiDb:451 - User favorites MCUs=[]
+2024-11-15 16:13:48,061 [INFO] Activator:179 - 
+
+
+2024-11-15 16:13:48,062 [INFO] Activator:180 - !SESSION log4j initialized

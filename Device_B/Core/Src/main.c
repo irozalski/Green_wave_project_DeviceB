@@ -65,7 +65,12 @@ uint8_t command = 0x0E;
 uint32_t lastCommandTime = 0;
 
 //state variables
-int transmission_step = 0;
+uint8_t transmission_step = 0;
+
+uint8_t ir_send_counter = 0;
+
+int32_t rv_status = 0;
+int32_t sd_status = 0;
 
 /* USER CODE END PV */
 
@@ -139,19 +144,15 @@ int main(void)
 
   //nRF Config
   nRF24_Init(&hspi2);
-//    	nRF24_SetRXAddress(0, "Odb");
-//    	nRF24_SetTXAddress("Nad");
-//    	nRF24_RX_Mode();
-//
-  nRF24_SetRXAddress(0, "Nad");
-      nRF24_SetTXAddress("Odb");
-      nRF24_TX_Mode();
+
+  __CRC_CLK_ENABLE();
+  nRF24_SetRXAddress(0,(uint8_t *)"Nad");
+  nRF24_SetTXAddress((uint8_t *)"Nad");
 
   //IR Config
   ir_sender_init();
   ir_receiver_init();
 
-  HAL_Delay(200);
 
        uint8_t Message[] =
         {
@@ -178,25 +179,76 @@ int main(void)
   while (1)
   {
 
-	  if(transmission_step == 0){
-	  	  int value = ir_read();
-	  	  	  	  if (value != -1) {
-	  	  	  	    if (value == IR_CODE_ONOFF){
-	  	  	  	    	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	  	  	  	    	transmission_step = 1;
-	  	  	  	    }
-	  	  	  	  }
-	  	  }
-	  	  if(transmission_step == 1){
-	  	  	  uint32_t currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
-	  	  	  	  if ((currentTime - lastCommandTime) >= 1000) {
-	  	  	  	      NEC_SendCommand(command);           // Wysłanie komendy
-	  	  	  	      lastCommandTime = currentTime;      // Aktualizacja czasu ostatniego wysłania
-	  	  	  	  }
-	  	  }
+	  switch (transmission_step) {
+	    case 0: {
+	      int value = ir_read();
+	      if (value != -1) {
+	        if (value == IR_CODE_ONOFF) {
+	          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	          transmission_step = 1;
+	        }
+	      }
+	      break;
+	    }
+
+	    case 1: {
+	      uint32_t currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
+	      if ((currentTime - lastCommandTime) >= 1000) {
+	        NEC_SendCommand(command);       // Wysłanie komendy
+	        lastCommandTime = currentTime;  // Aktualizacja czasu ostatniego wysłania
+	        ir_send_counter += 1;
+	      }
+	      if (ir_send_counter >= 6) {
+	        transmission_step = 2;
+	      }
+	      break;
+	    }
+
+	    case 2: {
+	      nRF24_TX_Mode();
+	      transmission_step = 3;
+	      break;
+	    }
+
+	    case 3: {
+	      sd_status = send_message(50);
+	      if (sd_status == 1) {
+	        transmission_step = 4;
+	      }
+	      break;
+	    }
+
+	    case 4: {
+	      nRF24_RX_Mode();
+
+	      transmission_step = 5;
+	      break;
+	    }
+
+	    case 5: {
+	      rv_status = receive_message();
+	      if (rv_status == 1) {
+	        transmission_step = 6;
+	      }
+	      break;
+	    }
+	    case 6: {
+	      HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+	      transmission_step = 7;
+	      break;
+	    }
+
+	    case 7: {
+	      transmission_step = 0;
+	      ir_send_counter = 0;
+
+	      break;
+	    }
+	  }
+
+
     /* USER CODE END WHILE */
-	  //send_message(50);
-	  //receive_message();
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -541,6 +593,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, CE_NRF_Pin|CS_NRF_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LD2_Pin */
@@ -549,6 +604,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LD3_Pin */
+  GPIO_InitStruct.Pin = LD3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LD3_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : CE_NRF_Pin CS_NRF_Pin */
   GPIO_InitStruct.Pin = CE_NRF_Pin|CS_NRF_Pin;
