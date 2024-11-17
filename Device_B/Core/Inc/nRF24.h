@@ -1,9 +1,4 @@
-/*
- * nRF24.h
- *
- *  Created on: Apr 26, 2020
- *      Author: Mateusz Salamon
- */
+
 
 #ifndef INC_NRF24_NRF24_H_
 #define INC_NRF24_NRF24_H_

@@ -1,3 +1,5 @@
+"./Core/Src/ir_receiver.o"
+"./Core/Src/ir_sender.o"
 "./Core/Src/main.o"
 "./Core/Src/nRF24.o"
 "./Core/Src/ring_buffer.o"

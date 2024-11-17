@@ -1,9 +1,4 @@
-/*
- * nRF24.c
- *
- *  Created on: Apr 26, 2020
- *      Author: Mateusz Salamon
- */
+
 
 #include "main.h"
 #include "spi.h"
@@ -31,7 +26,7 @@ extern volatile uint8_t nrf24_rx_flag, nrf24_tx_flag, nrf24_mr_flag;
 
 static void nRF24_Delay(uint8_t Time)
 {
-	HAL_Delay(1);
+	HAL_Delay(Time);
 }
 
 static void nRF24_SendSpi(uint8_t *Data, uint8_t Length)
@@ -102,6 +97,8 @@ static void nRF24_WriteRegisters(uint8_t reg, uint8_t* val, uint8_t len)
 
 void nRF24_RX_Mode(void)
 {
+	NRF24_CE_LOW;
+
 	uint8_t config = nRF24_ReadConfig();
 	// Restore pipe 0 adress after comeback from TX mode
 	nRF24_SetRXAddress(0, addr_p0_backup);
@@ -118,7 +115,7 @@ void nRF24_RX_Mode(void)
 	nRF24_FlushTX();
 
 	NRF24_CE_HIGH;
-	nRF24_Delay(1);
+	nRF24_Delay(20);
 }
 
 void nRF24_TX_Mode(void)
@@ -138,7 +135,7 @@ void nRF24_TX_Mode(void)
 	// Flush TX
 	nRF24_FlushTX();
 
-	nRF24_Delay(1);
+	nRF24_Delay(20);
 }
 
 
@@ -368,14 +365,18 @@ void nRF24_WaitTX()
 		status = nRF24_ReadStatus();
 	}while(!((status & (1<<NRF24_MAX_RT)) || (status & (1<<NRF24_TX_DS))));
 
+	// Clear the relevant status flags
+	    nRF24_WriteStatus((1 << NRF24_MAX_RT) | (1 << NRF24_TX_DS));
+
 }
 
 void nRF24_ReadRXPaylaod(uint8_t *data)
 {
 	nRF24_ReadRegisters(NRF24_CMD_R_RX_PAYLOAD, data, NRF24_PAYLOAD_SIZE);
-	nRF24_WriteRegister(NRF24_STATUS, (1<NRF24_RX_DR));
-	if(nRF24_ReadStatus() & (1<<NRF24_TX_DS))
-		nRF24_WriteRegister(NRF24_STATUS, (1<<NRF24_TX_DS));
+	nRF24_WriteRegister(NRF24_STATUS, (1<<NRF24_RX_DR));
+//	if(nRF24_ReadStatus() & (1<<NRF24_TX_DS)){
+//		nRF24_WriteRegister(NRF24_STATUS, (1<<NRF24_TX_DS));
+//	}
 }
 
 void nRF24_SendPacket(uint8_t* data)

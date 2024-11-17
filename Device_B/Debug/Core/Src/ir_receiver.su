@@ -1,0 +1,5 @@
+../Core/Src/ir_receiver.c:19:16:calc_pulse	16	static
+../Core/Src/ir_receiver.c:38:16:calc_pulse_short	16	static
+../Core/Src/ir_receiver.c:56:6:ir_tim_interrupt	16	static
+../Core/Src/ir_receiver.c:88:6:ir_receiver_init	8	static
+../Core/Src/ir_receiver.c:94:5:ir_read	16	static

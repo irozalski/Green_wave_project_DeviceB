@@ -28,11 +28,12 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "stdint.h"
-#include <string.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdlib.h>
+#include "stdint.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -62,6 +63,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LD2_Pin GPIO_PIN_13
 #define LD2_GPIO_Port GPIOC
+#define LD3_Pin GPIO_PIN_1
+#define LD3_GPIO_Port GPIOA
 #define CE_NRF_Pin GPIO_PIN_3
 #define CE_NRF_GPIO_Port GPIOB
 #define CS_NRF_Pin GPIO_PIN_4
