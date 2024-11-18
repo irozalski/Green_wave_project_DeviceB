@@ -1,0 +1,6 @@
+../Core/Src/rsa_driver.c:94:6:RSA_Driver_Get_Random_Message	8	static
+../Core/Src/rsa_driver.c:106:6:Encrypt_And_Add_Random_Message	24	static
+../Core/Src/rsa_driver.c:120:9:Decrypt_And_Check_RSA_Message	24	static
+../Core/Src/rsa_driver.c:139:9:RSA_Encrypt	120	static
+../Core/Src/rsa_driver.c:181:9:RSA_Decrypt	48	static
+../Core/Src/rsa_driver.c:214:12:Buffercmp	24	static
