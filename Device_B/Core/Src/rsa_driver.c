@@ -94,6 +94,11 @@ RSAprivKey_stt PrivKey_st;
 void RSA_Driver_Get_Random_Message(){
 	Random_message_init();
 		 GenerateRandomMessage(Message, sizeof(Message));
+
+		    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
+		    HAL_UART_Transmit(&huart1, "Losowa wiadomosc:\n", 18, 1000);
+		    HAL_UART_Transmit(&huart1, Message, 17, 1000);
+		    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
 }
 
 //void RSA_Pass_Message(uint8_t *msg, uint8_t length){

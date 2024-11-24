@@ -13,3 +13,6 @@ void ir_receiver_init(void);
 // Funkcja odczytująca dane
 // return - kod klawisza lub -1
 int ir_read(void);
+
+void ir_enable_interrupt(void);
+void ir_disable_interrupt(void);

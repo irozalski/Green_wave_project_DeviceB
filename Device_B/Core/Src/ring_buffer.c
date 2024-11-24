@@ -8,7 +8,6 @@
 #include "ring_buffer.h"
 #include "nRF24_Defs.h"
 #include "nRF24.h"
-#include "usart.h"
 #include "rsa_driver.h"
 ///////////////////////////////////////RSA/////////////////////////////////////////////////////////////////////
 //#include "crypto.h"
@@ -172,11 +171,15 @@ int32_t receive_message(){
 		    //MessageLength = sprintf(Message, "%s\n\r", chunk);
 		    //HAL_UART_Transmit(&huart1, Message, MessageLength, 1000);
 
-		    // Optionally, you can check if the entire message is received and process it
 		    if (rx_head >= expected_message_size) {
 		    uint8_t received_message[expected_message_size];
 		    buffer_get_full_message(received_message, expected_message_size);  // Extract full message
-		    //HAL_UART_Transmit(&huart1, received_message, expected_message_size, 1000);  // Transmit message via UART
+
+		    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
+		    HAL_UART_Transmit(&huart1, "Odebrana zaszyfrowana wiadomosc:\n", 33, 1000);
+		    HAL_UART_Transmit(&huart1, received_message, expected_message_size, 1000);
+		    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
+
 		    //MSG == MSG???
 		    result = Decrypt_And_Check_RSA_Message(0, received_message);
 		    if(result==1){

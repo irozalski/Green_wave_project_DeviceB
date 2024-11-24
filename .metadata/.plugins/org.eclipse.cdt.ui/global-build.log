@@ -1,126 +1,130 @@
-23:05:27 **** Incremental Build of configuration Debug for project Device_B ****
+16:03:37 **** Incremental Build of configuration Debug for project Device_B ****
 make -j4 all 
 arm-none-eabi-gcc "../Core/Src/rsa_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rsa_driver.d" -MT"Core/Src/rsa_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/rsa_driver.o"
+../Core/Src/rsa_driver.c: In function 'RSA_Driver_Get_Random_Message':
+../Core/Src/rsa_driver.c:99:34: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+   99 |       HAL_UART_Transmit(&huart1, "Losowa wiadomosc:\n", 18, 1000);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~
+      |                                  |
+      |                                  char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Inc/rsa_driver.h:11,
+                 from ../Core/Src/rsa_driver.c:11:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
 arm-none-eabi-gcc -o "Device_B.elf" @"objects.list"  -lSTM32CryptographicV3.0.0_CM4_GCC_ot -mcpu=cortex-m4 -T"C:\Users\Igor\Desktop\Green_wave_deviceB\Device_B\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Device_B.map" -Wl,--gc-sections -static -L"C:\Users\Igor\Desktop\STM32CubeExpansion_Crypto_V3.1.0\Fw_Crypto\STM32F4\Middlewares\ST\STM32_Cryptographic\Lib" --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Device_B.elf
  
 arm-none-eabi-size   Device_B.elf 
 arm-none-eabi-objdump -h -S  Device_B.elf  > "Device_B.list"
    text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
+  37584	     60	   8452	  46096	   b410	Device_B.elf
 Finished building: default.size.stdout
  
 Finished building: Device_B.list
  
-23:05:35 **** Incremental Build of configuration Debug for project Device_B ****
+16:03:52 **** Incremental Build of configuration Debug for project Device_B ****
 make -j4 all 
 arm-none-eabi-size   Device_B.elf 
    text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
+  37584	     60	   8452	  46096	   b410	Device_B.elf
 Finished building: default.size.stdout
  
-23:11:30 **** Incremental Build of configuration Debug for project Device_B ****
+16:44:50 **** Incremental Build of configuration Debug for project Device_B ****
 make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:13:01 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:15:05 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:15:22 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:33:38 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:35:16 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:37:36 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:39:28 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:42:00 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:43:20 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:45:06 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-23:57:01 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-00:00:46 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-size   Device_B.elf 
-   text	   data	    bss	    dec	    hex	filename
-  36964	     60	   8444	  45468	   b19c	Device_B.elf
-Finished building: default.size.stdout
- 
-00:02:55 **** Incremental Build of configuration Debug for project Device_B ****
-make -j4 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc "../Core/Src/ring_buffer.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ring_buffer.d" -MT"Core/Src/ring_buffer.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/ring_buffer.o"
+arm-none-eabi-gcc "../Core/Src/rsa_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rsa_driver.d" -MT"Core/Src/rsa_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/rsa_driver.o"
+../Core/Src/rsa_driver.c: In function 'RSA_Driver_Get_Random_Message':
+../Core/Src/rsa_driver.c:99:34: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+   99 |       HAL_UART_Transmit(&huart1, "Losowa wiadomosc:\n", 18, 1000);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~
+      |                                  |
+      |                                  char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Inc/rsa_driver.h:11,
+                 from ../Core/Src/rsa_driver.c:11:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+../Core/Src/rsa_driver.c: In function 'Decrypt_And_Check_RSA_Message':
+../Core/Src/rsa_driver.c:135:33: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  135 |      HAL_UART_Transmit(&huart1, "Odszyfrowana wiadomosc:\n", 33, 1000);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                 |
+      |                                 char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Inc/rsa_driver.h:11,
+                 from ../Core/Src/rsa_driver.c:11:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
 arm-none-eabi-gcc -o "Device_B.elf" @"objects.list"  -lSTM32CryptographicV3.0.0_CM4_GCC_ot -mcpu=cortex-m4 -T"C:\Users\Igor\Desktop\Green_wave_deviceB\Device_B\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Device_B.map" -Wl,--gc-sections -static -L"C:\Users\Igor\Desktop\STM32CubeExpansion_Crypto_V3.1.0\Fw_Crypto\STM32F4\Middlewares\ST\STM32_Cryptographic\Lib" --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Device_B.elf
  
 arm-none-eabi-size   Device_B.elf 
 arm-none-eabi-objdump -h -S  Device_B.elf  > "Device_B.list"
    text	   data	    bss	    dec	    hex	filename
-  36428	     60	   8444	  44932	   af84	Device_B.elf
+  37648	     60	   8452	  46160	   b450	Device_B.elf
+Finished building: default.size.stdout
+ 
+Finished building: Device_B.list
+ 
+16:47:40 **** Incremental Build of configuration Debug for project Device_B ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/rsa_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rsa_driver.d" -MT"Core/Src/rsa_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/rsa_driver.o"
+../Core/Src/rsa_driver.c: In function 'RSA_Driver_Get_Random_Message':
+../Core/Src/rsa_driver.c:99:34: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+   99 |       HAL_UART_Transmit(&huart1, "Losowa wiadomosc:\n", 18, 1000);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~
+      |                                  |
+      |                                  char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Inc/rsa_driver.h:11,
+                 from ../Core/Src/rsa_driver.c:11:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:177:35: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  177 |        HAL_UART_Transmit(&huart1, "Numer pojazdu:", 15, 1000);
+      |                                   ^~~~~~~~~~~~~~~~
+      |                                   |
+      |                                   char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Src/main.c:20:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+../Core/Src/main.c:178:41: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  178 |        HAL_UART_Transmit(&huart1, value + "\n", 2, 1000);
+      |                                   ~~~~~~^~~~~~
+      |                                         |
+      |                                         char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:406,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Src/main.c:20:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+arm-none-eabi-gcc -o "Device_B.elf" @"objects.list"  -lSTM32CryptographicV3.0.0_CM4_GCC_ot -mcpu=cortex-m4 -T"C:\Users\Igor\Desktop\Green_wave_deviceB\Device_B\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Device_B.map" -Wl,--gc-sections -static -L"C:\Users\Igor\Desktop\STM32CubeExpansion_Crypto_V3.1.0\Fw_Crypto\STM32F4\Middlewares\ST\STM32_Cryptographic\Lib" --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Device_B.elf
+ 
+arm-none-eabi-size   Device_B.elf 
+arm-none-eabi-objdump -h -S  Device_B.elf  > "Device_B.list"
+   text	   data	    bss	    dec	    hex	filename
+  37584	     60	   8452	  46096	   b410	Device_B.elf
 Finished building: default.size.stdout
  
 Finished building: Device_B.list

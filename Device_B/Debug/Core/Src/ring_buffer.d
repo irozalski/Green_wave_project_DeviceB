@@ -30,7 +30,7 @@ Core/Src/ring_buffer.o: ../Core/Src/ring_buffer.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/nRF24_Defs.h ../Core/Inc/nRF24.h ../Core/Inc/usart.h \
+ ../Core/Inc/usart.h ../Core/Inc/nRF24_Defs.h ../Core/Inc/nRF24.h \
  ../Core/Inc/rsa_driver.h \
  C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc/crypto.h \
  C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc/config.h \
@@ -140,9 +140,9 @@ Core/Src/ring_buffer.o: ../Core/Src/ring_buffer.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+../Core/Inc/usart.h:
 ../Core/Inc/nRF24_Defs.h:
 ../Core/Inc/nRF24.h:
-../Core/Inc/usart.h:
 ../Core/Inc/rsa_driver.h:
 C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc/crypto.h:
 C:/Users/Igor/Desktop/STM32CubeExpansion_Crypto_V3.1.0/Fw_Crypto/STM32F4/Middlewares/ST/STM32_Cryptographic/Inc/config.h:

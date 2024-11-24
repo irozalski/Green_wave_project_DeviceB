@@ -15,6 +15,8 @@ typedef enum {
 static volatile uint32_t received_value;
 static int received_bits;
 
+static int8_t value;
+
 //Normal NEC protocol
 static pulse_t calc_pulse(uint32_t time)
 {
@@ -96,7 +98,20 @@ int ir_read(void)
 	if (received_bits != 32)
 		return -1;
 
-	uint8_t value = received_value >> 16;
+	value = received_value >> 16;
+	received_value = 0;
 	received_bits = 0;
 	return value;
+}
+
+//Interrupt en/d
+
+void ir_disable_interrupt(void)
+{
+    HAL_TIM_IC_Stop_IT(&htim3, TIM_CHANNEL_1);
+}
+
+void ir_enable_interrupt(void)
+{
+    HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
 }

@@ -62,13 +62,16 @@ UART_HandleTypeDef huart1;
 volatile uint8_t nrf24_rx_flag, nrf24_tx_flag, nrf24_mr_flag;
 
 //IR variables
-uint8_t command = 0x0E;
+uint8_t command = 0xC;
 uint32_t lastCommandTime = 0;
 
 //state variables
 uint8_t transmission_step = 0;
 
 uint8_t ir_send_counter = 0;
+int8_t value = 0;
+
+uint32_t currentTime = 0;
 
 int32_t rv_status = 0;
 int32_t sd_status = 0;
@@ -165,10 +168,15 @@ int main(void)
 
 	  switch (transmission_step) {
 	    case 0: {
-	      int value = ir_read();
+	      value = ir_read();
 	      if (value != -1) {
-	        if (value == IR_CODE_ONOFF) {
+	        if (value >= 10 || value <= 255) {
+	          ir_disable_interrupt();
 	          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
+			    HAL_UART_Transmit(&huart1, "Numer pojazdu:\n", 15, 1000);
+			    HAL_UART_Transmit(&huart1, value + "\n", 2, 1000);
+			    /////////////////////////////////////WIADOMOSC TESTOWA/////////////////////////////////////////
 	          transmission_step = 1;
 	        }
 	      }
@@ -176,20 +184,20 @@ int main(void)
 	    }
 
 	    case 1: {
-	      uint32_t currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
+	      currentTime = HAL_GetTick();  // Pobranie aktualnego czasu w ms
 	      if ((currentTime - lastCommandTime) >= 1000) {
 	        NEC_SendCommand(command);       // Wysłanie komendy
 	        lastCommandTime = currentTime;  // Aktualizacja czasu ostatniego wysłania
 	        ir_send_counter += 1;
 	      }
-	      if (ir_send_counter >= 6) {
+	      if (ir_send_counter == 6) {
 	        transmission_step = 2;
 	      }
 	      break;
 	    }
 
 	    case 2: {
-	    	Encrypt_And_Add_Random_Message(0);
+	    	Encrypt_And_Add_Random_Message(value-10);
 	      nRF24_TX_Mode();
 	      transmission_step = 3;
 	      break;
@@ -225,6 +233,8 @@ int main(void)
 
 	    case 7: {
 	      transmission_step = 0;
+	      //value = -1;
+	      ir_enable_interrupt();
 	      ir_send_counter = 0;
 	      RSA_Driver_Get_Random_Message();
 	      break;
